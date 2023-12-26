@@ -1,6 +1,5 @@
 import java.io.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
@@ -10,11 +9,12 @@ public class Main {
   public static void main(String[] args) throws FileNotFoundException {
     if (args.length == 1) { //TODO: possible extension to allow multiple file path arguments
       File input = new File(args[0]);
-      Scanner myReader = new Scanner(input);
-      while (myReader.hasNextLine()) {
-        String data = myReader.nextLine();
-        if (containsHanScript(data)) {
-          chineseSentences.add(data);
+      try (Scanner myReader = new Scanner(input)) {
+        while (myReader.hasNextLine()) {
+          String data = myReader.nextLine();
+          if (containsHanScript(data)) {
+            chineseSentences.add(data);
+          }
         }
       }
       SubtitleComparator subComp = new SubtitleComparator(chineseSentences);
