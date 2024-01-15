@@ -1,4 +1,4 @@
-package main.java.com.github.edsmort;
+package com.github.edsmort;
 
 import java.io.*;
 import java.util.ArrayList;
