@@ -1,3 +1,5 @@
+package main.java.com.github.edsmort;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -8,7 +10,7 @@ public class Main {
   static List<String> chineseSentences = new ArrayList<>();
 
   public static void main(String[] args) throws FileNotFoundException {
-    if (args.length == 1) { //TODO: possible extension to allow multiple file path arguments
+    if (args.length == 1) { 
       File input = new File(args[0]);
       try (Scanner myReader = new Scanner(input)) {
         while (myReader.hasNextLine()) {

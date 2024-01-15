@@ -1,6 +1,7 @@
+package main.java.com.github.edsmort;
+
 import java.io.*;
 import java.util.*;
-import java.net.URL;
 
 public class SubtitleComparator {
   private List<String> subtitleLines;
