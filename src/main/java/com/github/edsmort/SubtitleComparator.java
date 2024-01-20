@@ -4,20 +4,16 @@ import java.io.*;
 import java.util.*;
 
 public class SubtitleComparator {
-  private List<String> subtitleLines;
-  private Hashtable<String, String> chineseHSKReferenceDict;
-  private Hashtable<String, String> wordsInSubtitles;
-  private Hashtable<String, Integer> HSKCounts;
+  private Map<String, String> chineseHSKReferenceDict;
+  private Map<String, Integer> HSKCounts;
   
-  public SubtitleComparator(List<String> userSubtitles) throws FileNotFoundException {
-    subtitleLines = userSubtitles; 
+  public SubtitleComparator() {
     chineseHSKReferenceDict = populateChineseHSKReferenceDict();
     HSKCounts = initHSKCounts();
-    wordsInSubtitles = findWords(subtitleLines);
   }
 
-  private Hashtable<String, Integer> initHSKCounts() {
-    Hashtable<String, Integer> counts = new Hashtable<String, Integer>();
+  private Map<String, Integer> initHSKCounts() {
+    Map<String, Integer> counts = new HashMap<String, Integer>();
     for (int i = 1; i < 10; i++) {
       counts.put(String.valueOf(i), 0);
     }
@@ -26,8 +22,8 @@ public class SubtitleComparator {
     return counts;
   }
 
-  private Hashtable<String, String> populateChineseHSKReferenceDict() throws FileNotFoundException {
-    Hashtable<String, String> wordsHSK = new Hashtable<String, String>();
+  private Map<String, String> populateChineseHSKReferenceDict() {
+    Map<String, String> wordsHSK = new HashMap<>();
     InputStream inputStream = getClass().getResourceAsStream("/dict_hsk.csv");
     try (Scanner myReader = new Scanner(inputStream)) {
       while (myReader.hasNextLine()) {
@@ -35,12 +31,23 @@ public class SubtitleComparator {
         String[] splitData = data.split(",");
         wordsHSK.put(splitData[0],splitData[1]);
       }
+    } catch (Exception e) {
+      System.out.println("dict_hsk.csv file not in src/main/resources");
+      System.err.println(e);
     }
     return wordsHSK;
   }
 
-  public Hashtable<String, String> findWords(List<String> subtitles) {
-    Hashtable<String, String> subtitleWords = new Hashtable<String, String>();
+  public Map<String, String> compareKnownWordsToSubtitle(List<String> knownWords, Map<String, String> subtitleWords) {
+    for (String known : knownWords) {
+      if (subtitleWords.get(known) != null) subtitleWords.remove(known);
+    }
+    return subtitleWords;
+  }
+
+  //TODO: refactor this and separate out some logic
+  public Map<String, String> findWords(List<String> subtitles) {
+    Map<String, String> subtitleWords = new HashMap<>();
     for (String line : subtitles) {
       String[] textBlocks = line.split(" "); //blocks of text in a line are sometimes separated with a space, we can assume that no single word will be created using characters either side of a space
       for (String textBlock : textBlocks) {
@@ -55,9 +62,9 @@ public class SubtitleComparator {
               HSKCounts.put(HSKLevel, HSKCounts.get(HSKLevel) +1);
               HSKCounts.put("total", HSKCounts.get("total") + 1);
               chineseChars = Arrays.copyOfRange(chineseChars, i, chineseChars.length);
-                break;
-              } else if (i == 1) {
-                subtitleWords.put(wordCandidate,"unknown");
+              break;
+            } else if (i == 1) {
+              subtitleWords.put(wordCandidate,"unknown");
               HSKCounts.put("unknown",HSKCounts.get("unknown") + 1);
               HSKCounts.put("total", HSKCounts.get("total") + 1);
               chineseChars = new char[0];
@@ -72,7 +79,7 @@ public class SubtitleComparator {
     return subtitleWords;
   }
 
-  public Hashtable<String, Integer> getHSKCounts() {
+  public Map<String, Integer> getHSKCounts() {
     return HSKCounts;
   }
 }
