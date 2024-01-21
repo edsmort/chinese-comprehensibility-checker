@@ -3,8 +3,8 @@
 ## What it does
 
 Given an srt file of a chinese show or movie and an optional list of known words, it:
-- Tells you what percentage of the subtitles are comprised of words you don’t know (as defined by your list of known words)
-- Lists the unknown words
+- Tells you what percentage of the subtitles are comprised of words you don’t know (as defined by your list of known words) *Work in Progress*
+- Lists the unknown words 
 - If a list of known words is not provided, it tells you what percentage of the words in the show are in each HSK level (or not in HSK at all)
 
 ## Motivation:
