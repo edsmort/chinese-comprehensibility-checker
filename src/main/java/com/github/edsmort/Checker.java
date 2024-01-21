@@ -25,6 +25,10 @@ public class Checker implements Runnable {
     System.out.println(textBreakdown);
     if (userKnownWordsFile != null) {
       Map<String, String> unknownWords = subComp.compareKnownWordsToSubtitle(readFile(userKnownWordsFile), subtitleWords);
+      System.out.println("Unknown Words");
+      unknownWords.forEach((word, hskLevel)-> {
+        System.out.println(word + ", HSK: " + hskLevel);
+      });
     }
   }
 
