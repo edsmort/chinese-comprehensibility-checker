@@ -10,8 +10,6 @@ import picocli.CommandLine;
 import picocli.CommandLine.*;
 
 public class Checker implements Runnable {
-  static List<String> chineseSentences;
-  static List<String> userKnownWords;
 
   @Parameters(index = "0", description = "The subtitle file to be analysed") // Add support for multiple subtitle files
   private File subtitleFile;
@@ -22,11 +20,11 @@ public class Checker implements Runnable {
   @Override
   public void run(){
     SubtitleComparator subComp = new SubtitleComparator();
-    Map<String,String> subtitleWords = subComp.findWords(chineseSentences);
+    Map<String,String> subtitleWords = subComp.findWords(readFile(subtitleFile));
     String textBreakdown = formatHSKBreakdown(subComp.getHSKCounts());
     System.out.println(textBreakdown);
-    if (userKnownWords != null) {
-      Map<String, String> unknownWords = subComp.compareKnownWordsToSubtitle(userKnownWords, subtitleWords);
+    if (userKnownWordsFile != null) {
+      Map<String, String> unknownWords = subComp.compareKnownWordsToSubtitle(readFile(userKnownWordsFile), subtitleWords);
     }
   }
 
